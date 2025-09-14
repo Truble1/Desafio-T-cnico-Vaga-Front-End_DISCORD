@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from '@heroui/react'
+import Link from 'next/link'
 import api from '@/lib/api'
 
 export default function TestApiPage() {
@@ -92,12 +93,12 @@ export default function TestApiPage() {
         </div>
         
         <div className="mt-4">
-          <a 
+          <Link 
             href="/"
             className="text-blue-500 hover:underline"
           >
             ← Voltar para Home
-          </a>
+          </Link>
         </div>
       </div>
     </div>

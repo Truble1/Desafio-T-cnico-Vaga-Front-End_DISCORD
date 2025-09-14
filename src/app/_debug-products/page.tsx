@@ -1,7 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@heroui/react'
+import Link from 'next/link'
+import Image from 'next/image'
 import { productsApi } from '@/lib/api'
 import { useAuthStore } from '@/stores/authStore'
 
@@ -12,7 +14,7 @@ export default function DebugProductsPage() {
   const token = useAuthStore((state) => state.token)
   const user = useAuthStore((state) => state.user)
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     if (!token) {
       setError('❌ Token não encontrado - faça login primeiro')
       return
@@ -33,13 +35,13 @@ export default function DebugProductsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [token])
 
   useEffect(() => {
     if (token) {
       fetchProducts()
     }
-  }, [token])
+  }, [token, fetchProducts])
 
   return (
     <div className="min-h-screen p-8">
@@ -137,11 +139,12 @@ export default function DebugProductsPage() {
                           {/* Preview da imagem */}
                           <div className="mt-4">
                             <strong>🖼️ Preview:</strong>
-                            <div className="mt-2 w-32 h-32 bg-gray-200 dark:bg-gray-600 rounded flex items-center justify-center">
-                              <img 
+                            <div className="mt-2 w-32 h-32 bg-gray-200 dark:bg-gray-600 rounded flex items-center justify-center relative">
+                              <Image 
                                 src={product.thumbnail.url} 
                                 alt={product.title}
-                                className="max-w-full max-h-full object-contain rounded"
+                                fill
+                                className="object-contain rounded"
                                 onLoad={() => console.log('✅ Preview carregou:', product.title)}
                                 onError={() => console.log('❌ Erro no preview:', product.title)}
                               />
@@ -161,12 +164,12 @@ export default function DebugProductsPage() {
 
         {/* Link para voltar */}
         <div className="mt-8">
-          <a 
+          <Link 
             href="/products"
             className="text-blue-500 hover:underline"
           >
             ← Voltar para Gerenciar Produtos
-          </a>
+          </Link>
         </div>
       </div>
     </div>
